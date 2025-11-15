@@ -1,65 +1,68 @@
+import { Link } from "react-router-dom";
+
 const Login = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        {/* Title */}
-        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">
-          Login
-        </h2>
+    <main className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <section className="w-full max-w-sm bg-white rounded-lg shadow-sm p-5 sm:p-6">
+        <div className="mb-5">
+          <h1 className="text-lg font-semibold text-gray-900">Log in</h1>
+        </div>
 
-        {/* Form */}
-        <form className="space-y-5">
-          {/* Email */}
+        <form className="space-y-4">
           <div>
-            <label className="block text-gray-700 text-sm mb-1">Email</label>
+            <label htmlFor="email" className="block text-sm text-gray-700 mb-1">
+              Email address
+            </label>
             <input
+              id="email"
               type="email"
-              placeholder="Enter your email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md 
+              placeholder="Enter you email"
+              className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm placeholder-gray-400
                          focus:outline-none focus:ring-0"
             />
           </div>
 
-          {/* Password */}
           <div>
-            <label className="block text-gray-700 text-sm mb-1">Password</label>
+            <label
+              htmlFor="password"
+              className="block text-sm text-gray-700 mb-1"
+            >
+              Password
+            </label>
             <input
+              id="password"
               type="password"
-              placeholder="Enter your password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md 
+              placeholder="Your password"
+              className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm placeholder-gray-400
                          focus:outline-none focus:ring-0"
             />
           </div>
 
-          {/* Forgot Password */}
-          <div className="text-right">
-            <a
-              href="/forgot-password"
-              className="text-sm text-blue-600 hover:underline"
+          <div className="flex items-center justify-between">
+            <button
+              type="submit"
+              className="px-4 py-2  rounded-md text-white bg-linear-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-base text-sm text-center leading-5"
             >
-              Forgot password?
-            </a>
-          </div>
+              Sign in
+            </button>
 
-          {/* Button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md 
-                       hover:bg-blue-700 transition-colors"
-          >
-            Login
-          </button>
+            <Link
+              to="/forgot-password"
+              className="text-sm text-gray-600 hover:underline"
+            >
+              Forgot?
+            </Link>
+          </div>
         </form>
 
-        {/* Signup Redirect */}
-        <p className="text-center text-sm text-gray-600 mt-6">
+        <div className="mt-6 text-center text-sm text-gray-600">
           Don’t have an account?{" "}
-          <a href="/signup" className="text-blue-600 hover:underline">
-            Sign up
-          </a>
-        </p>
-      </div>
-    </div>
+          <Link to="/signup" className="text-blue-600 hover:underline">
+            Create one
+          </Link>
+        </div>
+      </section>
+    </main>
   );
 };
 
