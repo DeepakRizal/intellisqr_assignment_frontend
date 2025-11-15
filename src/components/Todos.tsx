@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../api/axios";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuthStore } from "../store/auth";
+import TodoItem, { type Todo } from "../components/TodoItem";
 
 async function fetchTodoList() {
   const res = await api.get("/todo");
@@ -17,14 +19,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-type Todo = {
-  _id: string;
-  title: string;
-  completed?: boolean;
-  createdAt?: string;
-};
-
-const Todos: React.FC = () => {
+const Todos = () => {
   const queryClient = useQueryClient();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
@@ -89,8 +84,8 @@ const Todos: React.FC = () => {
   });
 
   const onSubmit = async (formData: FormData) => {
-    formData.completed = false;
-    addTodo.mutate(formData, {
+    const payload = { ...formData, completed: false };
+    addTodo.mutate(payload, {
       onSuccess: () => {
         reset();
       },
@@ -121,28 +116,36 @@ const Todos: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-xl mx-auto bg-white rounded-lg shadow p-6">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-          Your Todos
-        </h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-semibold text-gray-800">Your Todos</h1>
+
+          <button
+            onClick={() => useAuthStore.getState().logout()}
+            className="text-sm px-3 py-1 border border-gray-200 rounded-md text-gray-700 hover:bg-gray-50 transition"
+          >
+            Logout
+          </button>
+        </div>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex items-center gap-3 mb-6"
+          className="flex items-center gap-3 mb-4"
           noValidate
         >
           <input
             {...register("title")}
             type="text"
             placeholder="Add a new todo..."
-            className="grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
             aria-invalid={!!errors.title}
             aria-describedby="title-error"
             disabled={isSubmitting || addTodo.isPending}
           />
+
           <button
             type="submit"
             disabled={isSubmitting || addTodo.isPending}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:outline-none active:bg-slate-700 disabled:pointer-events-none disabled:opacity-50 ml-2"
           >
             {isSubmitting || addTodo.isPending ? "Adding..." : "Add"}
           </button>
@@ -161,43 +164,19 @@ const Todos: React.FC = () => {
             </p>
           )}
           {isPending && <p>Loading...</p>}
-          {todos.map((todo: Todo) => (
-            <div
-              key={todo._id}
-              className="flex items-center justify-between bg-gray-50 p-3 rounded-md border"
-            >
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={!!todo.completed}
-                  onChange={() => handleToggle(todo)}
-                  className="h-4 w-4"
-                  disabled={!!deletingId || togglingId === todo._id}
-                />
-                <span
-                  className={`text-gray-800 ${
-                    todo.completed ? "line-through text-gray-400" : ""
-                  }`}
-                >
-                  {todo.title}
-                </span>
-                {togglingId === todo._id && (
-                  <span className="text-xs text-gray-500 ml-2">
-                    Updating...
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => handleDelete(todo._id)}
-                  className="text-red-600 hover:text-red-800 text-sm"
-                  disabled={!!deletingId}
-                >
-                  {deletingId === todo._id ? "Deleting..." : "Delete"}
-                </button>
-              </div>
-            </div>
-          ))}
+
+          <ul className="space-y-3">
+            {todos.map((todo: Todo) => (
+              <TodoItem
+                key={todo._id}
+                todo={todo}
+                deletingId={deletingId}
+                togglingId={togglingId}
+                onToggle={handleToggle}
+                onDelete={handleDelete}
+              />
+            ))}
+          </ul>
         </div>
       </div>
     </div>

@@ -41,46 +41,58 @@ const Login = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <section className="w-full max-w-sm bg-white rounded-lg shadow-sm p-5 sm:p-6">
+    <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+      <section className="w-full max-w-sm bg-white rounded-xl shadow-md p-6 sm:p-7">
         <div className="mb-5">
-          <h1 className="text-lg font-semibold text-gray-900">Log in</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Log in</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Welcome back — please enter your details.
+          </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Email address
             </label>
             <input
+              id="email"
               {...register("email")}
-              placeholder="Enter you email"
-              className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm placeholder-gray-400
-                         focus:outline-none focus:ring-0"
+              placeholder="Enter your email"
+              aria-invalid={Boolean(formState.errors?.email)}
+              className="block w-full px-3 py-2 rounded-lg border border-gray-200 text-sm placeholder-gray-400
+                         focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition"
             />
           </div>
 
           <div>
             <label
               htmlFor="password"
-              className="block text-sm text-gray-700 mb-1"
+              className="block text-sm font-medium text-gray-700 mb-2"
             >
               Password
             </label>
             <input
+              id="password"
               {...register("password")}
-              placeholder="Your password"
-              className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm placeholder-gray-400
-                         focus:outline-none focus:ring-0"
+              placeholder="Enter your password"
+              type="password"
+              aria-invalid={Boolean(formState.errors?.password)}
+              className="block w-full px-3 py-2 rounded-lg border border-gray-200 text-sm placeholder-gray-400
+                         focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition"
             />
           </div>
 
           <div className="flex items-center justify-between">
             <button
+              type="submit"
               disabled={formState.isSubmitting}
-              className="px-4 py-2  rounded-md text-white bg-linear-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-base text-sm text-center leading-5"
+              className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2 cursor-pointer"
             >
-              Log in
+              {formState.isSubmitting ? "Signing in…" : "Log in"}
             </button>
 
             <Link

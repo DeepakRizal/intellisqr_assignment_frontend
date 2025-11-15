@@ -8,6 +8,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import Todos from "./components/Todos";
 import NotFound from "./components/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/todos",
-    element: <Todos />,
+    element: (
+      <ProtectedRoute>
+        <Todos />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/",
